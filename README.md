@@ -17,10 +17,11 @@ Este projeto é uma API Back-end para triagem automática de tickets de suporte,
 
 - **CRUD de Usuários**: Cadastro, listagem, consulta por ID, atualização e exclusão.
 - **Triagem de Tickets**:
-  - Classificação automática nos canais: `OUVIDORIA`, `SAC`, `SUPORTE_TECNICO`, `FINANCEIRO`.
+  - Classificação automática via motor de regras heurísticas nos canais: `OUVIDORIA`, `SAC`, `SUPORTE_TECNICO`, `FINANCEIRO`.
   - Identificação de casos `FORA_DO_ESCOPO`.
   - Marcação de `PENDENTE_REVISAO` para casos ambíguos.
   - Definição de prioridade inicial (`HIGH`, `MEDIUM`, `LOW`).
+  - Preparado para integração com LLMs (Prompt documentado no código).
 - **Gestão de Status**: Atualização de status do ticket (`OPEN`, `PENDING`, `CLOSED`).
 - **Logs**: Monitoramento de operações críticas via logs estruturados.
 - **I18n**: Suporte básico a diferentes idiomas (pt, en) nos retornos de erro.
@@ -77,22 +78,18 @@ A API segue uma estrutura em camadas para melhor manutenibilidade:
 - `src/config`: Configurações globais (i18n).
 - `src/lib`: Bibliotecas compartilhadas (Prisma Client, Logger).
 
-## 📡 Exemplos de Requisição
+## 📡 Como Testar (API)
 
-As requisições podem ser testadas usando o arquivo [api.http](api.http) (extensão REST Client do VS Code) ou importando os exemplos no Postman.
+A forma mais fácil de testar é usando a extensão **REST Client** do VS Code com o arquivo:
+👉 [docs/api.http](docs/api.http)
 
-### Criar Usuário
-`POST /users`
-```json
-{
-  "name": "Lucas Amaral",
-  "email": "lucas@email.com",
-  "telephone": "+5511999999999",
-  "language": "pt"
-}
-```
+Lá você encontrará exemplos organizados por setor:
+- **Fluxo de Usuário:** Criação, busca, edição e exclusão.
+- **Fluxo de Tickets:** Exemplos específicos para triagem de Tecnologia e Ouvidoria.
 
-### Criar Ticket
+---
+
+### Exemplo de Requisição (Criar Ticket)
 `POST /tickets`
 ```json
 {
@@ -102,12 +99,6 @@ As requisições podem ser testadas usando o arquivo [api.http](api.http) (exten
 }
 ```
 
-### Atualizar Status
-`PATCH /tickets/:id/status`
-```json
-{
-  "status": "CLOSED"
-}
 ```
 
 ## 🏁 Health Check

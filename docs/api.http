@@ -1,6 +1,10 @@
 ### Variáveis
 @baseUrl = http://localhost:3333
 
+# ==============================================================================
+# USUÁRIOS
+# ==============================================================================
+
 ### Criar Usuário
 # @name createUser
 POST {{baseUrl}}/users
@@ -15,6 +19,25 @@ Content-Type: application/json
 
 ### Listar Usuários
 GET {{baseUrl}}/users
+
+### Buscar Usuário por ID
+GET {{baseUrl}}/users/1
+
+### Atualizar Usuário
+PUT {{baseUrl}}/users/1
+Content-Type: application/json
+
+{
+  "name": "Lucas Amaral Atualizado",
+  "telephone": "+5511888888888"
+}
+
+### Deletar Usuário
+DELETE {{baseUrl}}/users/1
+
+# ==============================================================================
+# TICKETS
+# ==============================================================================
 
 ### Criar Ticket (Suporte Técnico)
 # @name createTicketTech
@@ -37,24 +60,6 @@ Content-Type: application/json
   "userId": 1
 }
 
-### Buscar User por ID
-GET {{baseUrl}}/users/1
-
-### Atualizar Usuário
-PUT {{baseUrl}}/users/1
-Content-Type: application/json
-
-{
-  "name": "Lucas Amaral Atualizado",
-  "telephone": "+5511888888888"
-}
-
-### Deletar Usuário
-DELETE {{baseUrl}}/users/1
-
-### Health Check
-GET {{baseUrl}}/health
-
 ### Listar Todos os Tickets
 GET {{baseUrl}}/tickets
 
@@ -68,3 +73,11 @@ Content-Type: application/json
 {
   "status": "CLOSED"
 }
+
+# ==============================================================================
+# GERAL
+# ==============================================================================
+
+### Health Check
+GET {{baseUrl}}/health
+
