@@ -15,5 +15,6 @@ RUN npx prisma generate
 
 EXPOSE 3333
 
-CMD ["npm", "run", "dev"]
+# Usamos um script shell para garantir que as migrações rodem antes de iniciar o servidor
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run dev"]
 
