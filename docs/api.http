@@ -60,6 +60,26 @@ Content-Type: application/json
   "userId": 1
 }
 
+### Criar Ticket (SAC)
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Cancelamento de assinatura",
+  "description": "Quero cancelar meu plano pois não estou utilizando o serviço.",
+  "userId": 1
+}
+
+### Criar Ticket (Financeiro)
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Cobrança indevida",
+  "description": "Recebi uma cobrança duplicada no meu cartão de crédito este mês.",
+  "userId": 1
+}
+
 ### Listar Todos os Tickets
 GET {{baseUrl}}/tickets
 
