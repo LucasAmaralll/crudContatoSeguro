@@ -11,6 +11,6 @@ ticketRoutes.get('/', ticketController.index)
 
 ticketRoutes.get('/:id', ticketController.show)
 
-ticketRoutes.patch('/:id/status', ticketController.updateStatus)
+ticketRoutes.put('/:id/status', ticketController.updateStatus)
 
 export { ticketRoutes }

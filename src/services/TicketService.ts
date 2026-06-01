@@ -2,10 +2,13 @@ import { TicketRepository } from '../repositories/TicketRepository.js'
 import { prisma } from '../lib/prisma.js'
 import { CreateTicketDTO } from '../dtos/TicketDTOs.js'
 import { i18n, Language } from '../config/i18n.js'
-import { whatsappService } from './WhatsappService.js'
+import { classificationService } from './ClassificationService.js'
+import { logger } from '../lib/logger.js'
 
 class TicketService {
   async createTicket(data: CreateTicketDTO) {
+    logger.info({ userId: data.userId }, 'Iniciando criação de ticket')
+    
     const user = await prisma.user.findUnique({
       where: {
         id: data.userId,
@@ -15,61 +18,17 @@ class TicketService {
     const lang = (user?.language as Language) || 'pt'
 
     if (!user) {
+      logger.warn({ userId: data.userId }, 'Tentativa de criar ticket para usuário inexistente')
       throw new Error(i18n[lang].errors.userNotFound)
     }
 
-    const content = `${data.title} ${data.description}`.toLowerCase()
+    // Classificação via IA (Serviço dedicado)
+    const { channel, priority, reasoning } = await classificationService.classifyTicket(
+      data.title,
+      data.description
+    )
 
-    let channel:
-      | 'OUVIDORIA'
-      | 'SAC'
-      | 'SUPORTE_TECNICO'
-      | 'FINANCEIRO'
-      | 'FORA_DO_ESCOPO'
-      | 'PENDENTE_REVISAO' = 'PENDENTE_REVISAO'
-    let priority: 'LOW' | 'MEDIUM' | 'HIGH' = 'LOW'
-
-    if (
-      content.includes('denuncia') ||
-      content.includes('assédio') ||
-      content.includes('fraude') ||
-      content.includes('corrupção') ||
-      content.includes('Ética')
-    ) {
-      channel = 'OUVIDORIA'
-      priority = 'HIGH'
-    } else if (
-      content.includes('assinatura') ||
-      content.includes('cancelamento') ||
-      content.includes('entrega') ||
-      content.includes('atendimento')
-    ) {
-      channel = 'SAC'
-      priority = 'MEDIUM'
-    } else if (
-      content.includes('acesso') ||
-      content.includes('bug') ||
-      content.includes('falha') ||
-      content.includes('instabilidade') ||
-      content.includes('não funciona')
-    ) {
-      channel = 'SUPORTE_TECNICO'
-      priority = 'MEDIUM'
-    } else if (
-      content.includes('cobrança') ||
-      content.includes('pagamento') ||
-      content.includes('reembolso')
-    ) {
-      channel = 'FINANCEIRO'
-      priority = 'MEDIUM'
-    } else if (
-      data.description.length < 10 ||
-      content.includes('vago') ||
-      content.includes('teste')
-    ) {
-      channel = 'FORA_DO_ESCOPO'
-      priority = 'LOW'
-    }
+    logger.info({ channel, priority, reasoning }, 'Ticket classificado automaticamente')
 
     const repository = new TicketRepository()
 
@@ -81,33 +40,17 @@ class TicketService {
       priority,
     })
 
-    // Envio de notificação via WhatsApp (Assíncrono)
-    if (user.telephone) {
-      const message = whatsappService.formatMessage(
-        i18n[lang].notifications.ticketCreated,
-        { id: ticket.id, title: ticket.title }
-      )
-      whatsappService.sendMessage(user.telephone, message).catch(err => {
-        console.error('Erro ao enviar notificação de criação:', err)
-      })
-    }
-
     return ticket
   }
 
   async listTickets() {
-    const repository = new TicketRepository()
-
-    return await repository.findAll()
+    return await new TicketRepository().findAll()
   }
 
   async getTicketById(id: number) {
-    const repository = new TicketRepository()
-
-    const ticket = await repository.findById(id)
+    const ticket = await new TicketRepository().findById(id)
 
     if (!ticket) {
-      // Como não temos o usuário aqui sem buscar antes, vamos usar PT por padrão ou buscar o usuário
       throw new Error(i18n.pt.errors.ticketNotFound)
     }
 
@@ -124,22 +67,8 @@ class TicketService {
     }
 
     const updatedTicket = await repository.updateStatus(id, status)
-
-    // Envio de notificação de mudança de status
-    if (ticketExists.user?.telephone) {
-      const lang = (ticketExists.user.language as Language) || 'pt'
-      const message = whatsappService.formatMessage(
-        i18n[lang].notifications.ticketStatusUpdated,
-        { 
-          id: updatedTicket.id, 
-          title: updatedTicket.title,
-          status: updatedTicket.status
-        }
-      )
-      whatsappService.sendMessage(ticketExists.user.telephone, message).catch(err => {
-        console.error('Erro ao enviar notificação de status:', err)
-      })
-    }
+    
+    logger.info({ ticketId: id, status }, 'Status do ticket atualizado')
 
     return updatedTicket
   }

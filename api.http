@@ -1,0 +1,70 @@
+### Variáveis
+@baseUrl = http://localhost:3333
+
+### Criar Usuário
+# @name createUser
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Lucas Amaral",
+  "email": "lucas@email.com",
+  "telephone": "+5511999999999",
+  "language": "pt"
+}
+
+### Listar Usuários
+GET {{baseUrl}}/users
+
+### Criar Ticket (Suporte Técnico)
+# @name createTicketTech
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Erro ao acessar o sistema",
+  "description": "Não consigo fazer login, aparece erro 500.",
+  "userId": 1
+}
+
+### Criar Ticket (Ouvidoria/Ética)
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Denúncia de má conduta",
+  "description": "Gostaria de relatar um caso de assédio no setor financeiro.",
+  "userId": 1
+}
+
+### Buscar User por ID
+GET {{baseUrl}}/users/1
+
+### Atualizar Usuário
+PUT {{baseUrl}}/users/1
+Content-Type: application/json
+
+{
+  "name": "Lucas Amaral Atualizado",
+  "telephone": "+5511888888888"
+}
+
+### Deletar Usuário
+DELETE {{baseUrl}}/users/1
+
+### Health Check
+GET {{baseUrl}}/health
+
+### Listar Todos os Tickets
+GET {{baseUrl}}/tickets
+
+### Buscar Ticket por ID
+GET {{baseUrl}}/tickets/1
+
+### Atualizar Status do Ticket
+PUT {{baseUrl}}/tickets/1/status
+Content-Type: application/json
+
+{
+  "status": "CLOSED"
+}
