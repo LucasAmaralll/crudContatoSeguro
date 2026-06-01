@@ -34,10 +34,11 @@ Este projeto é uma API Back-end para triagem automática de tickets de suporte,
 ### Rodando com Docker (Recomendado)
 
 1. Clone o repositório.
-2. Na raiz do projeto, execute:
-   ```bash
-   docker-compose up --build
-   ```
+2. Na raiz do projeto, use os comandos facilitadores:
+   - **Subir o ambiente:** `npm run up`
+   - **Parar o ambiente:** `npm run down`
+   - **Ver logs em tempo real:** `npm run logs`
+   - **Rodar migrações manualmente:** `npm run migrate`
 3. A API estará disponível em `http://localhost:3333`.
 
 ### Rodando Localmente

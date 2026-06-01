@@ -6,6 +6,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "up": "docker-compose up -d --build",
+    "down": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "migrate": "docker-compose exec api npx prisma migrate deploy",
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
