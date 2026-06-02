@@ -25,6 +25,7 @@ Este projeto é uma API Back-end para triagem automática de tickets de suporte,
 - **Gestão de Status**: Atualização de status do ticket (`OPEN`, `PENDING`, `CLOSED`).
 - **Logs**: Monitoramento de operações críticas via logs estruturados.
 - **I18n**: Suporte básico a diferentes idiomas (pt, en) nos retornos de erro.
+- **Documentação**: Interface interativa via Swagger.
 
 ## 🛠️ Como Executar o Projeto
 
@@ -41,6 +42,7 @@ Este projeto é uma API Back-end para triagem automática de tickets de suporte,
    - **Ver logs em tempo real:** `npm run logs`
    - **Rodar migrações manualmente:** `npm run migrate`
 3. A API estará disponível em `http://localhost:3333`.
+4. Acesse a documentação interativa em `http://localhost:3333/docs`.
 
 ### Rodando Localmente
 
@@ -57,6 +59,7 @@ Este projeto é uma API Back-end para triagem automática de tickets de suporte,
    ```bash
    npm run dev
    ```
+5. Acesse a documentação interativa em `http://localhost:3333/docs`.
 
 ## 🧪 Como Executar os Testes
 
